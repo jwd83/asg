@@ -5,6 +5,7 @@ import sys
 import pygame
 import random
 import time
+from print_color import print_color
 
 
 def make_pattern(width, height):
@@ -22,8 +23,17 @@ def make_pattern(width, height):
 def main():
     pygame.init()
 
-    pattern_height = 200
-    pattern_width = 200
+    # check if we were provided a path to the depth file
+    if len(sys.argv) < 2:
+
+        print_color(
+            "RED",
+            "ERROR: No depth map file was specified.\nUsage: python asg.py <depthmap.png>",
+        )
+        sys.exit(1)
+
+    pattern_height = 256
+    pattern_width = 256
 
     pattern = make_pattern(pattern_width, pattern_height)
 
@@ -31,7 +41,10 @@ def main():
     filename = f"pattern_{int(time.time())}.png"
     pygame.image.save(pattern, filename)
 
-    print(f"Pattern saved as {filename}.")
+    print_color("GREEN", f"Pattern saved as {filename}.")
+
+    depth_map = pygame.image.load(sys.argv[1]).convert()
+    depth_map_width, depth_map_height = depth_map.get_size()
 
 
 if __name__ == "__main__":
